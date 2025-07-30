@@ -1,5 +1,6 @@
 import csv
 import os
+import re
 import threading
 
 import openpyxl
@@ -31,14 +32,26 @@ def translator(content):
     # 要把 _o 从url中删除 因为这是反爬机制
     url = "http://fanyi.youdao.com/translate?smartresult=dict&smartresult=rule"
 
-    data = {'i': content, 'from': 'AUTO', 'to': 'AUTO', 'smartresult': 'dict', 'client': 'fanyideskweb',
-            'salt': '15823838172021', 'sign': '835107d66fdbf50ec298924d963a1321', 'ts': '1582383817202',
-            'bv': '901200199a98c590144a961dac532964', 'doctype': 'json', 'version': '2.1', 'keyfrom': 'fanyi.web',
-            'action': 'FY_BY_CLICKBUTTION'}
+    data = {
+        'i': content,
+        'from': 'AUTO',
+        'to': 'AUTO',
+        'smartresult': 'dict',
+        'client': 'fanyideskweb',
+        'salt': '15823838172021',
+        'sign': '835107d66fdbf50ec298924d963a1321',
+        'ts': '1582383817202',
+        'bv': '901200199a98c590144a961dac532964',
+        'doctype': 'json',
+        'version': '2.1',
+        'keyfrom': 'fanyi.web',
+        'action': 'FY_BY_CLICKBUTTION',
+    }
 
     data = uP.urlencode(data).encode('UTF-8')
-    header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                            "Chrome/79.0.3945.130 Safari/537.36", }
+    header = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " "Chrome/79.0.3945.130 Safari/537.36",
+    }
 
     # 访问的时候加 上 header, 防止电脑知道你是爬虫
     req = uR.Request(url, data, header)
@@ -87,8 +100,7 @@ def excelParse_xlrd(path_, pattern=0):
             index += 1
             continue
 
-        if (sheet.row(index)[0].value is not None) and (
-                word.replace(" ", "a").encode("utf-8").isalpha()):
+        if (sheet.row(index)[0].value is not None) and (re.sub(r"[ ,-?']", "a", word).encode("utf-8").isalpha()):
             # myList[index][0]是 单词
             # myList[index][1][0] 是 词性
             # myList[index][1][1] 是 意思
@@ -119,7 +131,7 @@ def parseCsv(path_):
         read = csv.reader(f)
         for eachRow in read:
             # [word,pos,translation,phonetic,collins,tag,definition,exchange]
-            list_.append((eachRow[0], (eachRow[1], eachRow[2], eachRow[3], eachRow[4], eachRow[5], eachRow[6], eachRow[7] )))
+            list_.append((eachRow[0], (eachRow[1], eachRow[2], eachRow[3], eachRow[4], eachRow[5], eachRow[6], eachRow[7])))
 
     return list_
 
@@ -149,8 +161,7 @@ def excelParse(path_):
                 continue
 
             # check whether the cell is an English word
-            if (eachRow[0].value is not None) and (
-                    str(eachRow[0].value).strip().replace(" ", "a").encode("utf-8").isalpha()):
+            if (eachRow[0].value is not None) and (str(eachRow[0].value).strip().replace(" ", "a").encode("utf-8").isalpha()):
                 # myList[index][0]是 单词
                 # myList[index][1][0] 是 词性
                 # myList[index][1][1] 是 意思
@@ -221,7 +232,7 @@ def divideIntoLessons(list_, num=20):
     for i in range(lessons):
         # debug: += 千万不能写成 =
         # debug: += 把list分开了 因为太只能 所以把list里面每个值 加到 lessonList 里面了
-        lessonList.append(list_[count:(count + num)])
+        lessonList.append(list_[count : (count + num)])
         count += num
     lessonList.append(list_[count:])
     # print(lessonList)

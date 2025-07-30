@@ -18,3 +18,5 @@ PyQt5_GUI/RemV_Package/pyFile/__pycache__/
 version_setup/
 .gitignore
 !/PyQt5_GUI/RemV_Package/pyFile/getPassword.py
+dist
+build

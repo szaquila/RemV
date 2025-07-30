@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['RemV.py'],
-             pathex=[r'C:\Users\Armand\PycharmProjects\RemV\PyQt5_GUI\RemV_Package\pyFile'],
+             pathex=[r'D:\Workspace\Python\RemV\PyQt5_GUI\RemV_Package\pyFile'],
              binaries=[],
              datas=[(r'lib/res/image/*.png', "lib/res/image"), (r'lib/res/word_Repository/*.xlsx', "lib/res/word_Repository")
                     , (r'lib/*.txt',"lib"),(r'lib/res/image/*.jpg', "lib/res/image"),(r'lib/res/image/*.jpeg', "lib/res/image")
@@ -31,7 +31,8 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           console=False,
-          icon=r"lib/res/image/logo_1_128x128.ico"
+          icon=r"lib/res/image/logo_1_128x128.ico",
+          contents_directory='.',
           )
 
 coll = COLLECT(exe,
@@ -42,3 +43,4 @@ coll = COLLECT(exe,
                upx=True,
                upx_exclude=[],
                name='RemV')
+

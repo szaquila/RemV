@@ -22,8 +22,7 @@ import downloadScene
 import getPronFromYouDao
 import getSourceFromOuLu
 import getSuffixFromCgdict
-from pyFile import functions, getTranslationFromYouDao, createBookScene, addWordScene, \
-    newGUI, getGreatSentences
+from pyFile import functions, getTranslationFromYouDao, createBookScene, addWordScene, newGUI, getGreatSentences
 
 """
 @copyright   Copyright 2020 RemV
@@ -240,13 +239,17 @@ class RemVClass(QMainWindow):
         self.loadBookNames(self.pathList)
 
         if self.totalStudyTime == 0:
-            QMessageBox.information(self, "介绍和使用说明", "致用户的一封信：\n\n\t欢迎使用RemV,"
-                                                     "这是一款可以帮助你深度记忆单词的\n\t一款软件。"
-                                                     "此软件通过与用户互动提高注意力,从而达\n\t到更好的记忆效果!\n\n"
-                                                     "使用说明：\n\t1.上传文件或者使用本地提供的库。"
-                                                     "\n\t2. 选择一个自动生成的Lesson。\n\t3. 点击\"背单词\"或\"小测\"按钮 \n\n\t"
-                                                     "不再让英语成为负担, 祝你好运!\n\n肖凌奥 "
-                                                     "Armand\n联系方式(微信): xla920338028")
+            QMessageBox.information(
+                self,
+                "介绍和使用说明",
+                "致用户的一封信：\n\n\t欢迎使用RemV,"
+                "这是一款可以帮助你深度记忆单词的\n\t一款软件。"
+                "此软件通过与用户互动提高注意力,从而达\n\t到更好的记忆效果!\n\n"
+                "使用说明：\n\t1.上传文件或者使用本地提供的库。"
+                "\n\t2. 选择一个自动生成的Lesson。\n\t3. 点击\"背单词\"或\"小测\"按钮 \n\n\t"
+                "不再让英语成为负担, 祝你好运!\n\n肖凌奥 "
+                "Armand\n联系方式(微信): xla920338028",
+            )
 
         self.secondWin = self.accessSecond()()
         self.thirdWin = self.accessThird()()
@@ -298,15 +301,19 @@ class RemVClass(QMainWindow):
             self.close()
 
     def help(self):
-        responese = QMessageBox.question(self, "帮助", "联系方式: 920338028@qq.com (邮箱)"
-                                                     "\n\t xla920338028 (微信)"
-                                                     "\n "
-                                                     "\n有任何使用问题请前往: "
-                                                     "\n https://github.com/ArmandXiao/RemV.git"
-                                                     "\n"
-                                                     "\n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - "
-                                                     "\n - -                          是否前往？                        - -"
-                                                     "\n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
+        responese = QMessageBox.question(
+            self,
+            "帮助",
+            "联系方式: 920338028@qq.com (邮箱)"
+            "\n\t xla920338028 (微信)"
+            "\n "
+            "\n有任何使用问题请前往: "
+            "\n https://github.com/ArmandXiao/RemV.git"
+            "\n"
+            "\n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - "
+            "\n - -                          是否前往？                        - -"
+            "\n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ",
+        )
         if responese != 65536:
             webbrowser.open("https://github.com/ArmandXiao/RemV.git")
 
@@ -334,7 +341,7 @@ class RemVClass(QMainWindow):
 
         self.ui.stackedWidget.setCurrentIndex(4)
         index = self.ui.bookListWidget.row(item)
-        bookPath = (self.pathList[index])
+        bookPath = self.pathList[index]
         bool_ = True
 
         for each in self.wordsOAB.keys():
@@ -343,8 +350,7 @@ class RemVClass(QMainWindow):
                 break
 
         # If the book has been already parsed, do not parse it again.
-        if (self.createdBookName == functions.getFileName(bookPath)) or (
-                index == 0) or bool_:
+        if (self.createdBookName == functions.getFileName(bookPath)) or (index == 0) or bool_:
 
             tmp = self.parseBook(bookPath)
             if tmp is not None:
@@ -374,8 +380,7 @@ class RemVClass(QMainWindow):
         :return: None
         """
 
-        reply = QMessageBox.question(self, "确认", "你确定要从目录删除这本书吗？",
-                                     QMessageBox.Yes | QMessageBox.No)
+        reply = QMessageBox.question(self, "确认", "你确定要从目录删除这本书吗？", QMessageBox.Yes | QMessageBox.No)
 
         if reply != 65536:
             index = self.ui.bookListWidget.row(item)
@@ -444,35 +449,29 @@ class RemVClass(QMainWindow):
             if i == 0:  # update the first current word
                 self.currentWord = self.wordsOAB[self.currentBook][self.currentLesson][i][0]
 
-            self.ui.wordListWidget.addItem(
-                self.wordsOAB[self.currentBook][self.currentLesson][i][0]
-            )
+            self.ui.wordListWidget.addItem(self.wordsOAB[self.currentBook][self.currentLesson][i][0])
             if self.transSourceControl:
                 if i == 0:
                     self.currentMeaning = self.wordsOAB[self.currentBook][self.currentLesson][i][1][1]
-                self.ui.meaningListWidget.addItem(
-                    self.wordsOAB[self.currentBook][self.currentLesson][i][1][1]
-                )
+                self.ui.meaningListWidget.addItem(self.wordsOAB[self.currentBook][self.currentLesson][i][1][1])
             elif (self.wordsOAB[self.currentBook][self.currentLesson][i][1][0] is not None) or (
-                    self.wordsOAB[self.currentBook][self.currentLesson][i][1][0] != ""):
+                self.wordsOAB[self.currentBook][self.currentLesson][i][1][0] != ""
+            ):
                 if i == 0:  # update the first current meaning
-                    self.currentMeaning = str(self.wordsOAB[self.currentBook][self.currentLesson][i][1][0]) + "  " + \
-                                          self.wordsOAB[self.currentBook][self.currentLesson][i][1][1]
+                    self.currentMeaning = (
+                        str(self.wordsOAB[self.currentBook][self.currentLesson][i][1][0]) + "  " + self.wordsOAB[self.currentBook][self.currentLesson][i][1][1]
+                    )
 
                 self.ui.meaningListWidget.addItem(
-                    str(self.wordsOAB[self.currentBook][self.currentLesson][i][1][0]) + "  " +
-                    self.wordsOAB[self.currentBook][self.currentLesson][i][1][1]
+                    str(self.wordsOAB[self.currentBook][self.currentLesson][i][1][0]) + "  " + self.wordsOAB[self.currentBook][self.currentLesson][i][1][1]
                 )
             else:
                 if i == 0:
                     self.currentMeaning = self.wordsOAB[self.currentBook][self.currentLesson][i][1][1]
-                self.ui.meaningListWidget.addItem(
-                    self.wordsOAB[self.currentBook][self.currentLesson][i][1][1]
-                )
+                self.ui.meaningListWidget.addItem(self.wordsOAB[self.currentBook][self.currentLesson][i][1][1])
 
     def uploadBtnClicked(self):
-        filePath, _ = QFileDialog.getOpenFileName(self, "上传文件", "\\ ",
-                                                  "Excel (*.xlsx);; CSV (*.csv)")  # 设置文件扩展名过滤,注意用双分号间隔
+        filePath, _ = QFileDialog.getOpenFileName(self, "上传文件", "\\ ", "Excel (*.xlsx);; CSV (*.csv)")  # 设置文件扩展名过滤,注意用双分号间隔
         # _ 是返回的type 如果是excel 就返回 "Excel (*.xlsx)"
         if _ != "":
             name = functions.getFileName(filePath)
@@ -536,8 +535,7 @@ class RemVClass(QMainWindow):
         self.ui.statusBtn.setVisible(True)
         self.ui.bookListWidget.setEnabled(False)
         self.ui.lessonListWidget.setEnabled(False)
-        self.ui.quizLabel.setText(
-            "%s Lesson %d Quiz" % (functions.getBookNames([self.currentBook])[0], self.currentLesson + 1))
+        self.ui.quizLabel.setText("%s Lesson %d Quiz" % (functions.getBookNames([self.currentBook])[0], self.currentLesson + 1))
 
     def updateWord(self, index):
         """
@@ -552,16 +550,14 @@ class RemVClass(QMainWindow):
 
         if self.transSourceControl or self.wordsOAB[self.currentBook][self.currentLesson][index][1][0] is None:
             self.currentMeaning = self.wordsOAB[self.currentBook][self.currentLesson][index][1][1]
-            self.ui.meaningBrowser.setText(
-                self.wordsOAB[self.currentBook][self.currentLesson][index][1][1]
-            )
+            self.ui.meaningBrowser.setText(self.wordsOAB[self.currentBook][self.currentLesson][index][1][1])
 
         elif self.wordsOAB[self.currentBook][self.currentLesson][index][1][0] is not None:
-            self.currentMeaning = str(self.wordsOAB[self.currentBook][self.currentLesson][index][1][0]) + \
-                                  self.wordsOAB[self.currentBook][self.currentLesson][index][1][1]
+            self.currentMeaning = (
+                str(self.wordsOAB[self.currentBook][self.currentLesson][index][1][0]) + self.wordsOAB[self.currentBook][self.currentLesson][index][1][1]
+            )
             self.ui.meaningBrowser.setText(
-                str(self.wordsOAB[self.currentBook][self.currentLesson][index][1][0]) +
-                self.wordsOAB[self.currentBook][self.currentLesson][index][1][1]
+                str(self.wordsOAB[self.currentBook][self.currentLesson][index][1][0]) + self.wordsOAB[self.currentBook][self.currentLesson][index][1][1]
             )
 
         # 居中显示
@@ -618,9 +614,7 @@ class RemVClass(QMainWindow):
 
             self.currentIndex = -1  # 设置成-1 就可以先更新变量 再update了
             self.ui.wordBrowser.setText("确认环节")
-            self.ui.meaningBrowser.setText("\t中文意思没有啦"
-                                           "\n\t不过你同样可以点击显示按钮来查看"
-                                           "\n\t准备好了吗？")
+            self.ui.meaningBrowser.setText("\t中文意思没有啦" "\n\t不过你同样可以点击显示按钮来查看" "\n\t准备好了吗？")
             self.ui.countLabel.setText("")
             self.countRound = 1
             self.ui.showBtn.setEnabled(False)
@@ -632,8 +626,7 @@ class RemVClass(QMainWindow):
 
             self.ui.NextBtn.setEnabled(False)
             self.ui.wordBrowser.setText("\t快来小测吧~")
-            self.ui.meaningBrowser.setText("\t检查单词拼写"
-                                           "\n\t才是这个软件的核心")
+            self.ui.meaningBrowser.setText("\t检查单词拼写" "\n\t才是这个软件的核心")
             self.ui.backBtn.setEnabled(False)
             self.ui.translateBtn.setEnabled(False)
             self.ui.MenuBtn_1.setVisible(True)
@@ -997,17 +990,16 @@ class RemVClass(QMainWindow):
         # 处理words 把SAT单词书 分成好几节课 然后把SAT这真本书 放到wordsOAB 里面 名字与书的内容
         try:
             # check whether corresponding csv file exists
-            if ((".xlsx" in path) and (
-                    not os.path.exists("lib/res/word_Repository/csv/%s_remv.csv" % functions.getFileName(path)))) or (
-                    path == self.pathList[0]):
+            if ((".xlsx" in path) and (not os.path.exists("lib/res/word_Repository/csv/%s_remv.csv" % functions.getFileName(path)))) or (
+                path == self.pathList[0]
+            ):
                 # after parsing books, books have to be divided into lessons
                 self.wordsLFSB = functions.divideIntoLessons(functions.excelParse_xlrd(toRelativePath(path), 1))
                 # 1 represents to download offline translation
                 self.transSourceControl = 0
             elif ".csv" in path:
                 self.wordsLFSB = functions.divideIntoLessons(functions.parseCsv(toRelativePath(path)))
-                self.transList.update({path: functions.divideIntoLessons(
-                    functions.parseCsv(path))})
+                self.transList.update({path: functions.divideIntoLessons(functions.parseCsv(path))})
                 self.transSourceControl = 1
             else:
                 # after parsing books, books have to be divided into lessons
@@ -1015,9 +1007,9 @@ class RemVClass(QMainWindow):
                 # 0 represents to only parse the excel
 
                 # Pattern: (word,(pos,translation,phonetic,collins,tag,definition,exchange))
-                self.transList.update({path: functions.divideIntoLessons(
-                    functions.parseCsv("lib/res/word_Repository/csv/%s_remv.csv"
-                                       % functions.getFileName(path)))})
+                self.transList.update(
+                    {path: functions.divideIntoLessons(functions.parseCsv("lib/res/word_Repository/csv/%s_remv.csv" % functions.getFileName(path)))}
+                )
 
                 self.transSourceControl = 1
         except:
@@ -1180,7 +1172,10 @@ class RemVClass(QMainWindow):
                 pickle.dump(self.totalStudyTime, handle, protocol=pickle.HIGHEST_PROTOCOL)
                 # currentBook 是地址 currentLesson是下标 得加一
                 self.lastProgress = "进度: %s Lesson %d  共学习: %d 个单词！" % (
-                    functions.getBookNames([self.currentBook])[0], self.currentLesson + 1, self.accumulativeNum)
+                    functions.getBookNames([self.currentBook])[0],
+                    self.currentLesson + 1,
+                    self.accumulativeNum,
+                )
                 pickle.dump(self.lastProgress, handle, protocol=pickle.HIGHEST_PROTOCOL)
         except:
             pass
@@ -1277,13 +1272,7 @@ class RemVClass(QMainWindow):
 
     def connectDB_user(self):
         try:
-            self.conn_user = pymysql.connect(
-                host='localhost',
-                port=3306,
-                user="remv_user",
-                passwd="iloveRemV",
-                db='remv'
-            )
+            self.conn_user = pymysql.connect(host='localhost', port=3306, user="remv_user", passwd="iloveRemV", db='remv')
             self.cursor_user = self.conn_user.cursor()
         except:
             pass
@@ -1307,34 +1296,30 @@ class RemVClass(QMainWindow):
         with open(r"lib/version.txt", "r") as f:
             currentVersion = f.readline().strip()
         try:
-            res = request.urlopen(
-                r"https://github.com/ArmandXiao/RemV/blob/master/PyQt5_GUI/RemV_Package/lib/version.txt",
-                timeout=3)
+            res = request.urlopen(r"https://github.com/ArmandXiao/RemV/blob/master/PyQt5_GUI/RemV_Package/lib/version.txt", timeout=3)
             html = res.read().decode("utf-8")
 
-            findVersion = re.compile(
-                "(<td id=\"LC1\" class=\"blob-code blob-code-inner js-file-line\">)(.*?)(</td>)")
+            findVersion = re.compile("(<td id=\"LC1\" class=\"blob-code blob-code-inner js-file-line\">)(.*?)(</td>)")
             newVersion = findVersion.findall(html)[0][1].strip()
             if newVersion != currentVersion:
-                response = QMessageBox.question(self, "软件更新提示", "新版本: %s "
-                                                                "\n当前版本:\n %s\n"
-                                                                "\n"
-                                                                "\n 是否前去官网查看或下载最新版"
-                                                                "\n\n https://github.com/ArmandXiao/RemV.git\n"
-                                                                "\n\n\t是否前往？"
-                                                % (newVersion, currentVersion))
+                response = QMessageBox.question(
+                    self,
+                    "软件更新提示",
+                    "新版本: %s "
+                    "\n当前版本:\n %s\n"
+                    "\n"
+                    "\n 是否前去官网查看或下载最新版"
+                    "\n\n https://github.com/ArmandXiao/RemV.git\n"
+                    "\n\n\t是否前往？" % (newVersion, currentVersion),
+                )
                 if response != 65536:
                     webbrowser.open("https://github.com/ArmandXiao/RemV.git")
             else:
-                response = QMessageBox.information(self, "软件更新提示", "当前版本: %s"
-                                                                   "\n已经是最新般啦！"
-                                                                   "\n请放心使用"
-                                                   % currentVersion)
+                response = QMessageBox.information(self, "软件更新提示", "当前版本: %s" "\n已经是最新般啦！" "\n请放心使用" % currentVersion)
         except:
-            response = QMessageBox.question(self, "提示", "自动检测版本更新失败: 连接超时"
-                                                        "\n请前往官网进行查看:"
-                                                        "\n\nhttps://github.com/ArmandXiao/RemV.git"
-                                                        "\n\n\t是否前往？")
+            response = QMessageBox.question(
+                self, "提示", "自动检测版本更新失败: 连接超时" "\n请前往官网进行查看:" "\n\nhttps://github.com/ArmandXiao/RemV.git" "\n\n\t是否前往？"
+            )
             if response != 65536:
                 webbrowser.open("https://github.com/ArmandXiao/RemV.git")
 
@@ -1399,8 +1384,9 @@ class RemVClass(QMainWindow):
                 self.ui_AW.wordEnter.returnPressed.connect(self.enterPressed)
 
             def enterPressed(self):
-                t1 = threading.Thread(target=outterClass.addToBook, args=(
-                    self.ui_AW.wordEnter.text(), len(outterClass.pathList) - 1, outterClass.createdBookName))
+                t1 = threading.Thread(
+                    target=outterClass.addToBook, args=(self.ui_AW.wordEnter.text(), len(outterClass.pathList) - 1, outterClass.createdBookName)
+                )
                 t1.setDaemon(True)
                 t1.start()
                 self.ui_AW.wordEnter.clear()
@@ -1529,7 +1515,15 @@ class RemVClass(QMainWindow):
                 self.time = len(self.list_) * 30
                 timeStr = "%d 分钟 %d 秒" % (self.time // 60, self.time % 60)
 
-                self.ui_DS.confirmLabel.setText("共选择 %d 本书, 需要约 %s" % (len(self.list_, ), timeStr))
+                self.ui_DS.confirmLabel.setText(
+                    "共选择 %d 本书, 需要约 %s"
+                    % (
+                        len(
+                            self.list_,
+                        ),
+                        timeStr,
+                    )
+                )
                 self.ui_DS.confirmLabel.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
 
             def download(self):
@@ -1591,33 +1585,33 @@ class RemVClass(QMainWindow):
                 margin: 0px 0px 0px 0px;
                 padding-top: 0px;
                 padding-bottom: 0px;
-                }   
-                
+                }
+
             QScrollBar:handle {
                 background: rgba(0, 0, 0, 50);
                 width: 12px;
                 border-radius: 6px;
                 border: none;
                 }
-                
+
             QScrollBar::handle:hover {
                 background: rgba(0, 0, 0, 100);
                 }
-                
+
             QScrollBar:sub-line {
                 height: 12px;
                 width: 10px;
                 background: transparent;
                 subcontrol-position: top;
                 }
-            
+
             QScrollBar:add-line{
                 height: 12px;
                 width: 10px;
                 background: transparent;
                 subcontrol-position: bottom;
                 }
-                              
+
         """
 
         horizontalScrollBarStyle = """
@@ -1627,25 +1621,25 @@ class RemVClass(QMainWindow):
                 height: 12px;
                 margin: 0px 0px 0 0px;
             }
-            
+
             QScrollBar::handle:horizontal {
                 background: rgba(0, 0, 0, 50);
                 width: 12px;
                 border-radius: 6px;
                 border: none;
             }
-            
+
             QScrollBar::handle:hover {
                 background: rgba(0, 0, 0, 100);
             }
-            
+
             QScrollBar:sub-line {
                 height: 12px;
                 width: 10px;
                 background: transparent;
                 subcontrol-position: left;
             }
-            
+
             QScrollBar:add-line {
                 height: 12px;
                 width: 10px;
