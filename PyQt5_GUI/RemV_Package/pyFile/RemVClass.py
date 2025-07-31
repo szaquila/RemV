@@ -10,7 +10,8 @@ from random import randint
 from urllib import request
 
 import openpyxl
-import pymysql
+# import pymysql
+import sqlite3
 import requests
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
@@ -34,7 +35,7 @@ from pyFile import functions, getTranslationFromYouDao, createBookScene, addWord
 
 
 def toRelativePath(path):
-    if getattr(sys, 'frozen', False):
+    if getattr(sys, "frozen", False):
         base_path = sys._MEIPASS
     else:
         base_path = os.path.abspath(".")
@@ -55,7 +56,6 @@ def internetCheck():
 
 
 class RemVClass(QMainWindow):
-
     def __init__(self):
         super().__init__()
 
@@ -230,10 +230,10 @@ class RemVClass(QMainWindow):
         self.ui.progressLabel.setText(self.lastProgress)
 
         # 解析已存在的excel
-        '''
+        """
         Do not parse all excels at the beginning. It wastes memories and affects the speed.
         Parse the excel when user gives clear sign of opening a specific excel.
-        '''
+        """
         # self.parseAllBooks(self.pathList)
         self.creatErrorBook()
         self.loadBookNames(self.pathList)
@@ -246,7 +246,7 @@ class RemVClass(QMainWindow):
                 "这是一款可以帮助你深度记忆单词的\n\t一款软件。"
                 "此软件通过与用户互动提高注意力,从而达\n\t到更好的记忆效果!\n\n"
                 "使用说明：\n\t1.上传文件或者使用本地提供的库。"
-                "\n\t2. 选择一个自动生成的Lesson。\n\t3. 点击\"背单词\"或\"小测\"按钮 \n\n\t"
+                '\n\t2. 选择一个自动生成的Lesson。\n\t3. 点击"背单词"或"小测"按钮 \n\n\t'
                 "不再让英语成为负担, 祝你好运!\n\n肖凌奥 "
                 "Armand\n联系方式(微信): xla920338028",
             )
@@ -351,7 +351,6 @@ class RemVClass(QMainWindow):
 
         # If the book has been already parsed, do not parse it again.
         if (self.createdBookName == functions.getFileName(bookPath)) or (index == 0) or bool_:
-
             tmp = self.parseBook(bookPath)
             if tmp is not None:
                 response = QMessageBox.question(self, "删除请求", "您是否需要从目录删除这本书")
@@ -614,7 +613,7 @@ class RemVClass(QMainWindow):
 
             self.currentIndex = -1  # 设置成-1 就可以先更新变量 再update了
             self.ui.wordBrowser.setText("确认环节")
-            self.ui.meaningBrowser.setText("\t中文意思没有啦" "\n\t不过你同样可以点击显示按钮来查看" "\n\t准备好了吗？")
+            self.ui.meaningBrowser.setText("\t中文意思没有啦\n\t不过你同样可以点击显示按钮来查看\n\t准备好了吗？")
             self.ui.countLabel.setText("")
             self.countRound = 1
             self.ui.showBtn.setEnabled(False)
@@ -626,15 +625,19 @@ class RemVClass(QMainWindow):
 
             self.ui.NextBtn.setEnabled(False)
             self.ui.wordBrowser.setText("\t快来小测吧~")
-            self.ui.meaningBrowser.setText("\t检查单词拼写" "\n\t才是这个软件的核心")
+            self.ui.meaningBrowser.setText("\t检查单词拼写\n\t才是这个软件的核心")
             self.ui.backBtn.setEnabled(False)
             self.ui.translateBtn.setEnabled(False)
             self.ui.MenuBtn_1.setVisible(True)
             self.ui.QuizBtn_1.setVisible(True)
 
-            self.conn_user.close()
-            self.conn_user = None
-            # self.conn_root.close()
+            try:
+                if self.conn_user:
+                    self.conn_user.close()
+                    self.conn_user = None
+                # self.conn_root.close()
+            except:
+                pass
             return
 
     def back(self):
@@ -767,8 +770,12 @@ class RemVClass(QMainWindow):
             self.ui.greatSentenceEng.setText(engSentence)
             self.ui.greatSentenceCHI.setText(chiSentence)
 
-            self.conn_user.close()
-            self.conn_user = None
+            try:
+                if self.conn_user:
+                    self.conn_user.close()
+                    self.conn_user = None
+            except:
+                pass
             return
 
     def translateBtnClicked(self):
@@ -823,7 +830,7 @@ class RemVClass(QMainWindow):
                     str_ += "[%s]" % data[0]
                 else:
                     str_ += "未找到音标"
-                str_ += '\n'
+                str_ += "\n"
 
                 sql = "SELECT pos FROM stardict WHERE word like '%s'" % self.currentWord
                 self.cursor_user.execute(sql)
@@ -844,7 +851,7 @@ class RemVClass(QMainWindow):
                             str_ += "(" + "adj" + ".) : " + (str(eachList[1]) + "%")
                         else:
                             str_ += "(" + eachList[0] + ".) : " + (str(eachList[1]) + "%")
-                    str_ += '\n'
+                    str_ += "\n"
 
                 sql = "SELECT translation FROM stardict WHERE word like '%s'" % self.currentWord
                 self.cursor_user.execute(sql)
@@ -889,7 +896,7 @@ class RemVClass(QMainWindow):
                 str_ += "[%s]" % phonetic
             else:
                 str_ += "未找到音标"
-            str_ += '\n'
+            str_ += "\n"
 
             if pos and pos != "":
                 if "/" in pos:
@@ -907,7 +914,7 @@ class RemVClass(QMainWindow):
                         str_ += "(" + "adj" + ".) : " + (str(eachList[1]) + "%")
                     else:
                         str_ += "(" + eachList[0] + ".) : " + (str(eachList[1]) + "%")
-                str_ += '\n'
+                str_ += "\n"
 
             self.currentChineseTrans = str_ + translation
 
@@ -957,24 +964,24 @@ class RemVClass(QMainWindow):
             for each in dataList:
                 eachList = each.split(":")
                 if eachList[0] == "p":
-                    str_ += "过去式: " + '\n' + eachList[1]
+                    str_ += "过去式: " + "\n" + eachList[1]
                 elif eachList[0] == "d":
-                    str_ += "过去分词: " + '\n' + eachList[1] + '\n'
+                    str_ += "过去分词: " + "\n" + eachList[1] + "\n"
                 elif eachList[0] == "i":
-                    str_ += "现在分词: " + '\n' + eachList[1] + '\n'
+                    str_ += "现在分词: " + "\n" + eachList[1] + "\n"
                 elif eachList[0] == "3":
-                    str_ += "三单: " + '\n' + eachList[1] + '\n'
+                    str_ += "三单: " + "\n" + eachList[1] + "\n"
                 elif eachList[0] == "r":
-                    str_ += "比较级: " + '\n' + eachList[1] + '\n'
+                    str_ += "比较级: " + "\n" + eachList[1] + "\n"
                 elif eachList[0] == "t":
-                    str_ += "最高级: " + '\n' + eachList[1] + '\n'
+                    str_ += "最高级: " + "\n" + eachList[1] + "\n"
                 elif eachList[0] == "s":
-                    str_ += "复数: " + '\n' + eachList[1] + '\n'
+                    str_ += "复数: " + "\n" + eachList[1] + "\n"
                 elif eachList[0] == "0":
-                    str_ += "原型: " + '\n' + eachList[1] + '\n'
+                    str_ += "原型: " + "\n" + eachList[1] + "\n"
                 elif eachList[0] == "1":
-                    str_ += "变形: " + '\n' + eachList[1] + '\n'
-                str_ += '\n'
+                    str_ += "变形: " + "\n" + eachList[1] + "\n"
+                str_ += "\n"
 
             if str_.strip() != "":
                 self.ui.exchangeEdit.setText(str_)
@@ -1097,19 +1104,19 @@ class RemVClass(QMainWindow):
                     elif each == "ielts":
                         tagList[index] = "雅思"
                     elif each == "zk":
-                        tagList[index] = '中考'
+                        tagList[index] = "中考"
                     elif each == "gk":
-                        tagList[index] = '高考'
+                        tagList[index] = "高考"
                     elif each == "ky":
-                        tagList[index] = '考研'
+                        tagList[index] = "考研"
                     elif each == "cet4":
-                        tagList[index] = '四级'
+                        tagList[index] = "四级"
                     elif each == "cet6":
-                        tagList[index] = '六级'
+                        tagList[index] = "六级"
                     elif each == "gre":
-                        tagList[index] = 'GRE'
+                        tagList[index] = "GRE"
                     elif each == "sat":
-                        tagList[index] = 'SAT'
+                        tagList[index] = "SAT"
                     index += 1
 
         length = len(tagList)
@@ -1166,7 +1173,7 @@ class RemVClass(QMainWindow):
         """
 
         try:
-            with open(toRelativePath('myData.pickle'), 'wb') as handle:
+            with open(toRelativePath("myData.pickle"), "wb") as handle:
                 pickle.dump(self.pathList, handle, protocol=pickle.HIGHEST_PROTOCOL)
                 pickle.dump(self.accumulativeNum, handle, protocol=pickle.HIGHEST_PROTOCOL)
                 pickle.dump(self.totalStudyTime, handle, protocol=pickle.HIGHEST_PROTOCOL)
@@ -1184,7 +1191,7 @@ class RemVClass(QMainWindow):
     def getData(self):
         try:
             # 不要变成绝对地址
-            with open(toRelativePath('myData.pickle'), 'rb') as handle:
+            with open(toRelativePath("myData.pickle"), "rb") as handle:
                 self.pathList = pickle.load(handle)
                 self.accumulativeNum = pickle.load(handle)
                 self.totalStudyTime = pickle.load(handle)
@@ -1196,7 +1203,7 @@ class RemVClass(QMainWindow):
             pass
 
     def creatErrorBook(self):
-        path = 'lib\\res\\word_Repository\\ErrorBook.xlsx'
+        path = "lib\\res\\word_Repository\\ErrorBook.xlsx"
         if path in self.pathList:
             return
 
@@ -1272,7 +1279,8 @@ class RemVClass(QMainWindow):
 
     def connectDB_user(self):
         try:
-            self.conn_user = pymysql.connect(host='localhost', port=3306, user="remv_user", passwd="iloveRemV", db='remv')
+            # self.conn_user = pymysql.connect(host="localhost", port=3306, user="remv_user", passwd="iloveRemV", db="remv")
+            self.conn_user = sqlite3.connect('lib/res/remv.db')
             self.cursor_user = self.conn_user.cursor()
         except:
             pass
@@ -1299,7 +1307,7 @@ class RemVClass(QMainWindow):
             res = request.urlopen(r"https://github.com/ArmandXiao/RemV/blob/master/PyQt5_GUI/RemV_Package/lib/version.txt", timeout=3)
             html = res.read().decode("utf-8")
 
-            findVersion = re.compile("(<td id=\"LC1\" class=\"blob-code blob-code-inner js-file-line\">)(.*?)(</td>)")
+            findVersion = re.compile('(<td id="LC1" class="blob-code blob-code-inner js-file-line">)(.*?)(</td>)')
             newVersion = findVersion.findall(html)[0][1].strip()
             if newVersion != currentVersion:
                 response = QMessageBox.question(
@@ -1315,10 +1323,10 @@ class RemVClass(QMainWindow):
                 if response != 65536:
                     webbrowser.open("https://github.com/ArmandXiao/RemV.git")
             else:
-                response = QMessageBox.information(self, "软件更新提示", "当前版本: %s" "\n已经是最新般啦！" "\n请放心使用" % currentVersion)
+                response = QMessageBox.information(self, "软件更新提示", "当前版本: %s\n已经是最新般啦！\n请放心使用" % currentVersion)
         except:
             response = QMessageBox.question(
-                self, "提示", "自动检测版本更新失败: 连接超时" "\n请前往官网进行查看:" "\n\nhttps://github.com/ArmandXiao/RemV.git" "\n\n\t是否前往？"
+                self, "提示", "自动检测版本更新失败: 连接超时\n请前往官网进行查看:\n\nhttps://github.com/ArmandXiao/RemV.git\n\n\t是否前往？"
             )
             if response != 65536:
                 webbrowser.open("https://github.com/ArmandXiao/RemV.git")
@@ -1416,7 +1424,8 @@ class RemVClass(QMainWindow):
         if not internetCheck():
             QMessageBox.information(self, "网络连接失败", "数据库请求连接失败\n请检查网络连接")
             return
-        conn = pymysql.connect(host='localhost', port=3306, user='remv_user', passwd="iloveRemV", db='remv')
+        # conn = pymysql.connect(host="localhost", port=3306, user="remv_user", passwd="iloveRemV", db="remv")
+        conn = sqlite3.connect('lib/res/remv.db')
         cur = conn.cursor()
         for i in range(6):
             if i == 0:
@@ -1474,7 +1483,6 @@ class RemVClass(QMainWindow):
         outterClass = self
 
         class DownloadScene(QWidget):
-
             # list_1 : 小学
             # list_2 : 初中
             # list_3 : 高中
@@ -1529,7 +1537,7 @@ class RemVClass(QMainWindow):
             def download(self):
                 # filter the csv that has been downloaded already
                 for each in self.list_:
-                    if os.path.exists(r'lib/res/word_Repository/csv/%s_remv.csv' % each):
+                    if os.path.exists(r"lib/res/word_Repository/csv/%s_remv.csv" % each):
                         self.list_.remove(each)
                         self.bookNum -= 1
                 self.myThread = MyThread(self.list_, outterClass)
@@ -1717,7 +1725,7 @@ class MyThread(threading.Thread):
     def run(self):
         for each in self.list_:
             name = dataBase_Tools.writeCSV_byName(each)
-            self.outterClass.pathList.append(r'lib/res/word_Repository/csv/%s_remv.csv' % each)
+            self.outterClass.pathList.append(r"lib/res/word_Repository/csv/%s_remv.csv" % each)
             self.finishedList.append(name)
 
         return self.finishedList
