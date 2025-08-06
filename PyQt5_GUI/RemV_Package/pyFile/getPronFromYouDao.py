@@ -1,6 +1,7 @@
 import os
-import subprocess
+# import subprocess
 import urllib.request
+import threading
 
 from playsound import playsound
 
@@ -12,11 +13,15 @@ from playsound import playsound
 @link        https://github.com/ArmandXiao/RemV.git
 """
 
+# 添加播放状态标志
+is_playing = False
+play_lock = threading.Lock()
 
 def downloadMP3FromYouDao(word, type_):
     word = word.replace(" ", "%20")
     url = "http://dict.youdao.com/dictvoice?type=%d&audio=%s" % (type_, word)
-    path = os.getcwd() + r"\lib\res\pron"
+    current_file_path = os.path.dirname(os.path.abspath(__file__))
+    path = current_file_path + r"\lib\res\pron"
     fileName = word + "_" + str(type_) + ".mp3"
 
     filePath = os.path.join(path, fileName)
@@ -34,12 +39,32 @@ def downloadMP3FromYouDao(word, type_):
 
 
 def playSound(word, type_):
-    path = downloadMP3FromYouDao(word, type_)
-    if path != "":
-        playsound(path)
+    # path = downloadMP3FromYouDao(word, type_)
+    # if path != "":
+        # playsound(path)
         # del
-        cmd = r"del %s" % path
-        subprocess.call(cmd, shell=True)
+        #cmd = r"del %s" % path
+        #subprocess.call(cmd, shell=True)
+    global is_playing
+
+    # 检查是否正在播放
+    with play_lock:
+        global is_playing
+        if is_playing:
+            return  # 如果正在播放，则直接返回，防止重复播放
+
+        path = downloadMP3FromYouDao(word, type_)
+        if path != "":
+            is_playing = True
+
+    try:
+        if path != "":
+            playsound(path)
+    finally:
+        # 播放完成后重置标志
+        with play_lock:
+            global is_playing
+            is_playing = False
 
 
 def sayTipSound():
