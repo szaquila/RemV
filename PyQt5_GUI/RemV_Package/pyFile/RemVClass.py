@@ -10,6 +10,7 @@ from random import randint
 from urllib import request
 
 import openpyxl
+
 # import pymysql
 import sqlite3
 import requests
@@ -126,7 +127,7 @@ class RemVClass(QMainWindow):
         # self.ui.meaningListWidget.setSpacing(5)
         # self.ui.wordListWidget.setSpacing(5)
         self.ui.wordListWidget.setColumnCount(2)
-        self.ui.wordListWidget.setHorizontalHeaderLabels(['单词', '释义'])
+        self.ui.wordListWidget.setHorizontalHeaderLabels(["单词", "释义"])
         self.ui.wordListWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.ui.wordListWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.ui.wordListWidget.setSelectionBehavior(QAbstractItemView.SelectRows)
@@ -477,7 +478,9 @@ class RemVClass(QMainWindow):
                 # self.ui.meaningListWidget.addItem(
                 #     str(self.wordsOAB[self.currentBook][self.currentLesson][i][1][0]) + "  " + self.wordsOAB[self.currentBook][self.currentLesson][i][1][1]
                 # )
-                item = QTableWidgetItem(str(self.wordsOAB[self.currentBook][self.currentLesson][i][1][0]) + "  " + self.wordsOAB[self.currentBook][self.currentLesson][i][1][1])
+                item = QTableWidgetItem(
+                    str(self.wordsOAB[self.currentBook][self.currentLesson][i][1][0]) + "  " + self.wordsOAB[self.currentBook][self.currentLesson][i][1][1]
+                )
                 self.ui.wordListWidget.setItem(i, 1, item)
             else:
                 if i == 0:
@@ -530,6 +533,7 @@ class RemVClass(QMainWindow):
         # self.ui.showBtn.setVisible(False)
 
         self.currentIndex = 0
+        self.prounciate(self.currentWord, 0)
 
     def changeScene_2(self):
         """
@@ -623,6 +627,7 @@ class RemVClass(QMainWindow):
                 self.ui.meaningBrowser.setText("")
                 # 更新count
                 self.ui.countLabel.setText("  " + str(self.currentIndex + 1))
+            self.prounciate(self.currentWord, 0)
 
         # 第一轮结束
         elif self.currentIndex == self.lessonLen - 1 and self.countRound == 0:
@@ -718,6 +723,7 @@ class RemVClass(QMainWindow):
         self.currentMeaning = self.wordsOAB[self.currentBook][self.currentLesson][self.currentIndex][1][1]
         # self.updateAll()
         self.updateAllTest()
+        self.prounciate(self.currentWord, 0)
 
     def updateAllTest(self):
         self.ui.meaningBrowser_2.setText(self.currentMeaning)
@@ -1297,7 +1303,7 @@ class RemVClass(QMainWindow):
     def connectDB_user(self):
         try:
             # self.conn_user = pymysql.connect(host="localhost", port=3306, user="remv_user", passwd="iloveRemV", db="remv")
-            self.conn_user = sqlite3.connect('lib/res/remv.db')
+            self.conn_user = sqlite3.connect("lib/res/remv.db")
             self.cursor_user = self.conn_user.cursor()
         except:
             pass
@@ -1442,7 +1448,7 @@ class RemVClass(QMainWindow):
             QMessageBox.information(self, "网络连接失败", "数据库请求连接失败\n请检查网络连接")
             return
         # conn = pymysql.connect(host="localhost", port=3306, user="remv_user", passwd="iloveRemV", db="remv")
-        conn = sqlite3.connect('lib/res/remv.db')
+        conn = sqlite3.connect("lib/res/remv.db")
         cur = conn.cursor()
         for i in range(6):
             if i == 0:

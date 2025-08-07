@@ -49,7 +49,15 @@ def playSound(word, type_):
         if path != "":
             is_playing = True
         else:
-            return  # 下载失败则直接返回
+            if type_ == 0:
+                type_ = 1
+            else:
+                type_ = 0
+            path = downloadMP3FromYouDao(word, type_)
+            if path == "":
+                is_playing = True
+            else:
+                return  # 下载失败则直接返回
 
     try:
         playsound(path)
