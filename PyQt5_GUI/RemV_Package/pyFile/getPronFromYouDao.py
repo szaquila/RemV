@@ -39,32 +39,32 @@ def downloadMP3FromYouDao(word, type_):
 
 
 def playSound(word, type_):
-    # path = downloadMP3FromYouDao(word, type_)
-    # if path != "":
-        # playsound(path)
-        # del
-        #cmd = r"del %s" % path
-        #subprocess.call(cmd, shell=True)
     global is_playing
-
     # 检查是否正在播放
     with play_lock:
-        global is_playing
         if is_playing:
             return  # 如果正在播放，则直接返回，防止重复播放
 
         path = downloadMP3FromYouDao(word, type_)
         if path != "":
             is_playing = True
+        else:
+            return  # 下载失败则直接返回
 
     try:
-        if path != "":
-            playsound(path)
+        playsound(path)
+    except Exception as e:
+        print(f"播放音频时出错: {e}")
     finally:
         # 播放完成后重置标志
         with play_lock:
-            global is_playing
             is_playing = False
+        # 删除临时文件
+        # try:
+        #     if os.path.exists(path):
+        #         os.remove(path)
+        # except Exception as e:
+        #     print(f"删除临时音频文件时出错: {e}")
 
 
 def sayTipSound():

@@ -16,7 +16,7 @@ import requests
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QCursor
-from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QDialog, QWidget
+from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QDialog, QWidget, QHeaderView, QTableWidgetItem, QAbstractItemView
 
 import dataBase_Tools
 import downloadScene
@@ -123,15 +123,22 @@ class RemVClass(QMainWindow):
         # 给列表添加 spacing
         self.ui.bookListWidget.setSpacing(20)
         self.ui.lessonListWidget.setSpacing(10)
-        self.ui.meaningListWidget.setSpacing(5)
-        self.ui.wordListWidget.setSpacing(5)
+        # self.ui.meaningListWidget.setSpacing(5)
+        # self.ui.wordListWidget.setSpacing(5)
+        self.ui.wordListWidget.setColumnCount(2)
+        self.ui.wordListWidget.setHorizontalHeaderLabels(['单词', '释义'])
+        self.ui.wordListWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.ui.wordListWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.ui.wordListWidget.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.ui.wordListWidget.horizontalHeader().setVisible(False)
+        # self.ui.wordListWidget.verticalHeader().setVisible(False)
 
         # 给列表添加 点击事件
         self.ui.bookListWidget.itemClicked.connect(self.bookClicked)
         self.ui.bookListWidget.itemDoubleClicked.connect(self.bookDoubleClicked)
         self.ui.lessonListWidget.itemClicked.connect(self.lessonClicked)
-        self.ui.wordListWidget.itemClicked.connect(self.relateMeaning)
-        self.ui.meaningListWidget.itemClicked.connect(self.relateWord)
+        # self.ui.wordListWidget.itemClicked.connect(self.relateMeaning)
+        # self.ui.meaningListWidget.itemClicked.connect(self.relateWord)
         # uploadBtn 添加点击事件
         self.ui.uploadButton.clicked.connect(self.uploadBtnClicked)
         self.ui.addBookBtn.clicked.connect(self.goToAddScene)
@@ -263,13 +270,13 @@ class RemVClass(QMainWindow):
         self.thirdWin.setWindowIcon(QIcon("lib\\res\\image\\logo_1_128x128.ico"))
         self.downloadScene.setWindowIcon(QIcon("lib\\res\\image\\logo_1_128x128.ico"))
 
-    def relateMeaning(self, item):
-        index = self.ui.wordListWidget.row(item)
-        self.ui.meaningListWidget.setCurrentRow(index)
+    # def relateMeaning(self, item):
+    #     index = self.ui.wordListWidget.row(item)
+    #     self.ui.meaningListWidget.setCurrentRow(index)
 
-    def relateWord(self, item):
-        index = self.ui.meaningListWidget.row(item)
-        self.ui.wordListWidget.setCurrentRow(index)
+    # def relateWord(self, item):
+    #     index = self.ui.meaningListWidget.row(item)
+    #     self.ui.wordListWidget.setCurrentRow(index)
 
     def EnglishBtnClicked(self):
         self.TransMode = 1
@@ -417,7 +424,7 @@ class RemVClass(QMainWindow):
 
         # 清空 wordListWi 和 meaningListWid
         self.ui.wordListWidget.clear()
-        self.ui.meaningListWidget.clear()
+        # self.ui.meaningListWidget.clear()
 
         self.setOverViewScene()
 
@@ -428,7 +435,7 @@ class RemVClass(QMainWindow):
         """
 
         self.ui.wordListWidget.clear()
-        self.ui.meaningListWidget.clear()
+        # self.ui.meaningListWidget.clear()
 
         # 在测试完后 更新label
         self.ui.progressLabel.setText(self.lastProgress)
@@ -443,16 +450,22 @@ class RemVClass(QMainWindow):
         self.ui.wordListWidget.setEnabled(True)
         self.ui.lessonListWidget.setEnabled(True)
 
+        self.ui.wordListWidget.setRowCount(self.lessonLen)
+
         # 根据currentBook 和 currentLesson 填补单词和意思
         for i in range(self.lessonLen):
             if i == 0:  # update the first current word
                 self.currentWord = self.wordsOAB[self.currentBook][self.currentLesson][i][0]
 
-            self.ui.wordListWidget.addItem(self.wordsOAB[self.currentBook][self.currentLesson][i][0])
+            # self.ui.wordListWidget.addItem(self.wordsOAB[self.currentBook][self.currentLesson][i][0])
+            item = QTableWidgetItem(str(self.wordsOAB[self.currentBook][self.currentLesson][i][0]))
+            self.ui.wordListWidget.setItem(i, 0, item)
             if self.transSourceControl:
                 if i == 0:
                     self.currentMeaning = self.wordsOAB[self.currentBook][self.currentLesson][i][1][1]
-                self.ui.meaningListWidget.addItem(self.wordsOAB[self.currentBook][self.currentLesson][i][1][1])
+                # self.ui.meaningListWidget.addItem(self.wordsOAB[self.currentBook][self.currentLesson][i][1][1])
+                item = QTableWidgetItem(self.wordsOAB[self.currentBook][self.currentLesson][i][1][1])
+                self.ui.wordListWidget.setItem(i, 1, item)
             elif (self.wordsOAB[self.currentBook][self.currentLesson][i][1][0] is not None) or (
                 self.wordsOAB[self.currentBook][self.currentLesson][i][1][0] != ""
             ):
@@ -461,13 +474,17 @@ class RemVClass(QMainWindow):
                         str(self.wordsOAB[self.currentBook][self.currentLesson][i][1][0]) + "  " + self.wordsOAB[self.currentBook][self.currentLesson][i][1][1]
                     )
 
-                self.ui.meaningListWidget.addItem(
-                    str(self.wordsOAB[self.currentBook][self.currentLesson][i][1][0]) + "  " + self.wordsOAB[self.currentBook][self.currentLesson][i][1][1]
-                )
+                # self.ui.meaningListWidget.addItem(
+                #     str(self.wordsOAB[self.currentBook][self.currentLesson][i][1][0]) + "  " + self.wordsOAB[self.currentBook][self.currentLesson][i][1][1]
+                # )
+                item = QTableWidgetItem(str(self.wordsOAB[self.currentBook][self.currentLesson][i][1][0]) + "  " + self.wordsOAB[self.currentBook][self.currentLesson][i][1][1])
+                self.ui.wordListWidget.setItem(i, 1, item)
             else:
                 if i == 0:
                     self.currentMeaning = self.wordsOAB[self.currentBook][self.currentLesson][i][1][1]
-                self.ui.meaningListWidget.addItem(self.wordsOAB[self.currentBook][self.currentLesson][i][1][1])
+                # self.ui.meaningListWidget.addItem(self.wordsOAB[self.currentBook][self.currentLesson][i][1][1])
+                item = QTableWidgetItem(str(self.wordsOAB[self.currentBook][self.currentLesson][i][1][1]))
+                self.ui.wordListWidget.setItem(i, 1, item)
 
     def uploadBtnClicked(self):
         filePath, _ = QFileDialog.getOpenFileName(self, "上传文件", "\\ ", "Excel (*.xlsx);; CSV (*.csv)")  # 设置文件扩展名过滤,注意用双分号间隔
@@ -1700,8 +1717,8 @@ class RemVClass(QMainWindow):
         self.ui.wordListWidget.verticalScrollBar().setStyleSheet(verticalScrollBarStyle)
         self.ui.wordListWidget.horizontalScrollBar().setStyleSheet(horizontalScrollBarStyle)
 
-        self.ui.meaningListWidget.verticalScrollBar().setStyleSheet(verticalScrollBarStyle)
-        self.ui.meaningListWidget.horizontalScrollBar().setStyleSheet(horizontalScrollBarStyle)
+        # self.ui.meaningListWidget.verticalScrollBar().setStyleSheet(verticalScrollBarStyle)
+        # self.ui.meaningListWidget.horizontalScrollBar().setStyleSheet(horizontalScrollBarStyle)
 
         self.ui.wordEnterListWidget.verticalScrollBar().setStyleSheet(verticalScrollBarStyle)
         self.ui.wordEnterListWidget.horizontalScrollBar().setStyleSheet(horizontalScrollBarStyle)

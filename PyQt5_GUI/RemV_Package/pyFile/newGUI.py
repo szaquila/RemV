@@ -355,7 +355,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setContentsMargins(50, 0, 50, 50)
         self.horizontalLayout_2.setSpacing(50)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.wordListWidget = QtWidgets.QListWidget(self.OverviewScene)
+        self.wordListWidget = QtWidgets.QTableWidget(self.OverviewScene)
         self.wordListWidget.setStyleSheet("    font: 20px;\n"
 "    font-style: bold;\n"
 "    font-style: italic;\n"
@@ -366,18 +366,18 @@ class Ui_MainWindow(object):
         self.wordListWidget.setWordWrap(False)
         self.wordListWidget.setObjectName("wordListWidget")
         self.horizontalLayout_2.addWidget(self.wordListWidget)
-        self.meaningListWidget = QtWidgets.QListWidget(self.OverviewScene)
-        self.meaningListWidget.setStyleSheet("    font: 20px;\n"
-"    font-style: bold;\n"
-"    background-color: rgba(255,255,255,200)")
-        self.meaningListWidget.setFrameShape(QtWidgets.QFrame.Box)
-        self.meaningListWidget.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.meaningListWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
-        self.meaningListWidget.setAutoScroll(True)
-        self.meaningListWidget.setProperty("showDropIndicator", True)
-        self.meaningListWidget.setAlternatingRowColors(True)
-        self.meaningListWidget.setObjectName("meaningListWidget")
-        self.horizontalLayout_2.addWidget(self.meaningListWidget)
+#         self.meaningListWidget = QtWidgets.QListWidget(self.OverviewScene)
+#         self.meaningListWidget.setStyleSheet("    font: 20px;\n"
+# "    font-style: bold;\n"
+# "    background-color: rgba(255,255,255,200)")
+#         self.meaningListWidget.setFrameShape(QtWidgets.QFrame.Box)
+#         self.meaningListWidget.setFrameShadow(QtWidgets.QFrame.Sunken)
+#         self.meaningListWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+#         self.meaningListWidget.setAutoScroll(True)
+#         self.meaningListWidget.setProperty("showDropIndicator", True)
+#         self.meaningListWidget.setAlternatingRowColors(True)
+#         self.meaningListWidget.setObjectName("meaningListWidget")
+#         self.horizontalLayout_2.addWidget(self.meaningListWidget)
         self.gridLayout_13.addLayout(self.horizontalLayout_2, 1, 0, 1, 1)
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setContentsMargins(-1, -1, 30, -1)
