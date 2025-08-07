@@ -533,7 +533,7 @@ class RemVClass(QMainWindow):
         # self.ui.showBtn.setVisible(False)
 
         self.currentIndex = 0
-        self.prounciate(self.currentWord, 0)
+        self.prounciate(self.currentWord, 1)
 
     def changeScene_2(self):
         """
@@ -627,7 +627,7 @@ class RemVClass(QMainWindow):
                 self.ui.meaningBrowser.setText("")
                 # 更新count
                 self.ui.countLabel.setText("  " + str(self.currentIndex + 1))
-            self.prounciate(self.currentWord, 0)
+            self.prounciate(self.currentWord, 1)
 
         # 第一轮结束
         elif self.currentIndex == self.lessonLen - 1 and self.countRound == 0:
@@ -723,7 +723,7 @@ class RemVClass(QMainWindow):
         self.currentMeaning = self.wordsOAB[self.currentBook][self.currentLesson][self.currentIndex][1][1]
         # self.updateAll()
         self.updateAllTest()
-        self.prounciate(self.currentWord, 0)
+        self.prounciate(self.currentWord, 1)
 
     def updateAllTest(self):
         self.ui.meaningBrowser_2.setText(self.currentMeaning)
